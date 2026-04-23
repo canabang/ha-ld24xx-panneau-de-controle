@@ -1,0 +1,44 @@
+# =================================================================
+# 📋 MODÈLE DE FIRMWARE - RADAR LD2450
+# OBJET : Configuration ESPHome pour capteur de présence LD2450
+# MISSION : Firmware générique avec support multi-zones
+# VERSION : 1.0.0 (Snapshot)
+# =================================================================
+
+substitutions:
+  name: "A_CHANGER_NOM_APPAREIL_LD2450"
+  devicename: "A_CHANGER_NOM_APPAREIL_LD2450"
+  friendly_name: "A_CHANGER_NOM_CONVIVIAL"
+  idname: "A_CHANGER_ID_UNIQUE" # "_" est le seul caractère autorisé
+  entity_name: "A_CHANGER_NOM_ENTITE" # Laisser vide pour avoir "Target...", ou mettre un nom pour avoir "Nom Target..."
+  
+  # Broches UART du Radar LD2450
+  tx_pin_ld2450: GPIO17
+  rx_pin_ld2450: GPIO16
+  
+  # Matériel
+  board: esp32dev
+  type: arduino
+  loglevel: DEBUG
+  
+  # Réseau (Placeholder)
+  static_ip: A_CHANGER_IP_STATIQUE
+
+  # ==========================================
+  #   SURCHARGE PERFORMANCE (depuis .ld2450.yaml)
+  # ==========================================
+  # ---> MODE RÉGLAGE (tracé fluide lors de la configuration)
+  # uart_throttle_ms: "250"
+  #
+  # ---> MODE PRODUCTION (valeur par défaut)
+  uart_throttle_ms: "1500"
+  # ==========================================
+
+packages:
+  base: !include .base.yaml
+  ld2450: !include .ld2450.yaml
+
+# Configuration de l'API Home Assistant
+api:
+  encryption:
+    key: "A_CHANGER_CLE_API"

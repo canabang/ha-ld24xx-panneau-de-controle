@@ -1,0 +1,35 @@
+# 🛡️ Sentinel White List .gitignore
+# Ce dépôt est en mode "Tout interdire sauf ce qui est explicitement autorisé"
+
+# 1. Tout ignorer par défaut
+*
+
+# 2. Autoriser les fichiers de gouvernance et documentation
+!/JOURNAL_MODIFICATIONS.md
+!/CONTRIBUER.md
+!/README.md
+!/LICENSE
+!/.gitignore
+
+# 3. Autoriser la structure Snapshot (Dossiers et YAML/H/MD)
+!/**/
+!*.yaml
+!*.h
+!*.md
+!*.gif
+!*.jpg
+!*.png
+
+# 4. EXCLUSIONS CRITIQUES (Sécurité)
+# Ignorer tous les rapports d'audit (Phases et Final)
+AUDIT_*.md
+# Ignorer les règles de gouvernance IA (Antigravity)
+PROJET_RULES.md
+# Ignorer systématiquement le dossier Lab (Secrets et IDs réels)
+/lab/
+
+
+# Ignorer les fichiers temporaires et système
+.DS_Store
+Thumbs.db
+*.log
