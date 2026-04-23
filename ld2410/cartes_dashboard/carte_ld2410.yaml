@@ -1,8 +1,8 @@
 # =================================================================
-# 📋 DASHBOARD - CARTE RADAR LD2410
+# 📋 DASHBOARD - CARTE RADAR LD2410 (DÉVELOPPEMENT)
 # OBJET : Interface de pilotage et d'analyse pour capteur LD2410
 # PRÉREQUIS HACS : config-template-card, mushroom, plotly-graph
-# VERSION : 1.0.0 (Stable)
+# VERSION : 1.1.0-dev
 # =================================================================
 
 type: vertical-stack
@@ -169,40 +169,64 @@ cards:
                 }
 
   # =================================================================
-  # 4. RÉGLAGES EXPERTS (Structure Ultra-Réactive Mirror)
+  # 4. RÉGLAGES EXPERTS (Structure Métamorphique Blue Mirror)
   # =================================================================
   - type: custom:tabbed-card
     tabs:
       # --- ONGLET MOVE ---
       - attributes:
-          label: "Seuils de Mouvement"
+          label: "Seuils MOVE"
         card:
           type: custom:config-template-card
           entities:
+            - input_boolean.radar_affichage_sliders
             - input_select.selection_radar_ld2410
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' + states['input_select.selection_radar_ld2410'].state + '_g0_move_threshold' : 'sun.sun' }
+              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
+              states['input_select.selection_radar_ld2410'].state +
+              '_g0_move_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' + states['input_select.selection_radar_ld2410'].state + '_g1_move_threshold' : 'sun.sun' }
+              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
+              states['input_select.selection_radar_ld2410'].state +
+              '_g1_move_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' + states['input_select.selection_radar_ld2410'].state + '_g2_move_threshold' : 'sun.sun' }
+              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
+              states['input_select.selection_radar_ld2410'].state +
+              '_g2_move_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' + states['input_select.selection_radar_ld2410'].state + '_g3_move_threshold' : 'sun.sun' }
+              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
+              states['input_select.selection_radar_ld2410'].state +
+              '_g3_move_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' + states['input_select.selection_radar_ld2410'].state + '_g4_move_threshold' : 'sun.sun' }
+              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
+              states['input_select.selection_radar_ld2410'].state +
+              '_g4_move_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' + states['input_select.selection_radar_ld2410'].state + '_g5_move_threshold' : 'sun.sun' }
+              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
+              states['input_select.selection_radar_ld2410'].state +
+              '_g5_move_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' + states['input_select.selection_radar_ld2410'].state + '_g6_move_threshold' : 'sun.sun' }
+              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
+              states['input_select.selection_radar_ld2410'].state +
+              '_g6_move_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' + states['input_select.selection_radar_ld2410'].state + '_g7_move_threshold' : 'sun.sun' }
+              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
+              states['input_select.selection_radar_ld2410'].state +
+              '_g7_move_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' + states['input_select.selection_radar_ld2410'].state + '_g8_move_threshold' : 'sun.sun' }
+              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
+              states['input_select.selection_radar_ld2410'].state +
+              '_g8_move_threshold' : 'sun.sun' }
           variables:
             esp: >-
-              states['input_select.selection_radar_ld2410'] ? states['input_select.selection_radar_ld2410'].state : ''
+              states['input_select.selection_radar_ld2410'] ?
+              states['input_select.selection_radar_ld2410'].state : ''
+            is_fast: "states['input_boolean.radar_affichage_sliders']?.state === 'on'"
             res: >-
-              parseFloat(states['select.' + (states['input_select.selection_radar_ld2410'] ? states['input_select.selection_radar_ld2410'].state : '') + '_distance_resolution']?.state || 0.75)
+              parseFloat(states['select.' +
+              (states['input_select.selection_radar_ld2410'] ?
+              states['input_select.selection_radar_ld2410'].state : '') +
+              '_distance_resolution']?.state || 0.75)
           card:
             type: grid
             columns: 2
@@ -211,70 +235,121 @@ cards:
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g0_move_threshold' }"
                 name: "G0 (0m)"
-                display_mode: buttons
+                display_mode: "${ is_fast ? 'slider' : 'buttons' }"
+                icon_color: blue
+                tap_action: { action: more-info }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g1_move_threshold' }"
                 name: "${ 'G1 (' + (1*res).toFixed(2) + 'm)' }"
-                display_mode: buttons
+                display_mode: "${ is_fast ? 'slider' : 'buttons' }"
+                icon_color: blue
+                tap_action: { action: more-info }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g2_move_threshold' }"
                 name: "${ 'G2 (' + (2*res).toFixed(2) + 'm)' }"
-                display_mode: buttons
+                display_mode: "${ is_fast ? 'slider' : 'buttons' }"
+                icon_color: blue
+                tap_action: { action: more-info }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g3_move_threshold' }"
                 name: "${ 'G3 (' + (3*res).toFixed(2) + 'm)' }"
-                display_mode: buttons
+                display_mode: "${ is_fast ? 'slider' : 'buttons' }"
+                icon_color: blue
+                tap_action: { action: more-info }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g4_move_threshold' }"
                 name: "${ 'G4 (' + (4*res).toFixed(2) + 'm)' }"
-                display_mode: buttons
+                display_mode: "${ is_fast ? 'slider' : 'buttons' }"
+                icon_color: blue
+                tap_action: { action: more-info }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g5_move_threshold' }"
                 name: "${ 'G5 (' + (5*res).toFixed(2) + 'm)' }"
-                display_mode: buttons
+                display_mode: "${ is_fast ? 'slider' : 'buttons' }"
+                icon_color: blue
+                tap_action: { action: more-info }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g6_move_threshold' }"
                 name: "${ 'G6 (' + (6*res).toFixed(2) + 'm)' }"
-                display_mode: buttons
+                display_mode: "${ is_fast ? 'slider' : 'buttons' }"
+                icon_color: blue
+                tap_action: { action: more-info }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g7_move_threshold' }"
                 name: "${ 'G7 (' + (7*res).toFixed(2) + 'm)' }"
-                display_mode: buttons
+                display_mode: "${ is_fast ? 'slider' : 'buttons' }"
+                icon_color: blue
+                tap_action: { action: more-info }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g8_move_threshold' }"
                 name: "${ 'G8 (' + (8*res).toFixed(2) + 'm)' }"
-                display_mode: buttons
+                display_mode: "${ is_fast ? 'slider' : 'buttons' }"
+                icon_color: blue
+                tap_action: { action: more-info }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
 
       # --- ONGLET STILL ---
       - attributes:
-          label: "Seuils d'Immobilité"
+          label: "Seuils STILL"
         card:
           type: custom:config-template-card
           entities:
+            - input_boolean.radar_affichage_sliders
             - input_select.selection_radar_ld2410
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' + states['input_select.selection_radar_ld2410'].state + '_g0_still_threshold' : 'sun.sun' }
+              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
+              states['input_select.selection_radar_ld2410'].state +
+              '_g0_still_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' + states['input_select.selection_radar_ld2410'].state + '_g1_still_threshold' : 'sun.sun' }
+              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
+              states['input_select.selection_radar_ld2410'].state +
+              '_g1_still_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' + states['input_select.selection_radar_ld2410'].state + '_g2_still_threshold' : 'sun.sun' }
+              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
+              states['input_select.selection_radar_ld2410'].state +
+              '_g2_still_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' + states['input_select.selection_radar_ld2410'].state + '_g3_still_threshold' : 'sun.sun' }
+              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
+              states['input_select.selection_radar_ld2410'].state +
+              '_g3_still_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' + states['input_select.selection_radar_ld2410'].state + '_g4_still_threshold' : 'sun.sun' }
+              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
+              states['input_select.selection_radar_ld2410'].state +
+              '_g4_still_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' + states['input_select.selection_radar_ld2410'].state + '_g5_still_threshold' : 'sun.sun' }
+              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
+              states['input_select.selection_radar_ld2410'].state +
+              '_g5_still_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' + states['input_select.selection_radar_ld2410'].state + '_g6_still_threshold' : 'sun.sun' }
+              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
+              states['input_select.selection_radar_ld2410'].state +
+              '_g6_still_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' + states['input_select.selection_radar_ld2410'].state + '_g7_still_threshold' : 'sun.sun' }
+              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
+              states['input_select.selection_radar_ld2410'].state +
+              '_g7_still_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' + states['input_select.selection_radar_ld2410'].state + '_g8_still_threshold' : 'sun.sun' }
+              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
+              states['input_select.selection_radar_ld2410'].state +
+              '_g8_still_threshold' : 'sun.sun' }
           variables:
             esp: >-
-              states['input_select.selection_radar_ld2410'] ? states['input_select.selection_radar_ld2410'].state : ''
+              states['input_select.selection_radar_ld2410'] ?
+              states['input_select.selection_radar_ld2410'].state : ''
+            is_fast: "states['input_boolean.radar_affichage_sliders']?.state === 'on'"
             res: >-
-              parseFloat(states['select.' + (states['input_select.selection_radar_ld2410'] ? states['input_select.selection_radar_ld2410'].state : '') + '_distance_resolution']?.state || 0.75)
+              parseFloat(states['select.' +
+              (states['input_select.selection_radar_ld2410'] ?
+              states['input_select.selection_radar_ld2410'].state : '') +
+              '_distance_resolution']?.state || 0.75)
           card:
             type: grid
             columns: 2
@@ -283,39 +358,66 @@ cards:
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g0_still_threshold' }"
                 name: "G0 (0m)"
-                display_mode: buttons
+                display_mode: "${ is_fast ? 'slider' : 'buttons' }"
+                icon_color: blue
+                tap_action: { action: more-info }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g1_still_threshold' }"
                 name: "${ 'G1 (' + (1*res).toFixed(2) + 'm)' }"
-                display_mode: buttons
+                display_mode: "${ is_fast ? 'slider' : 'buttons' }"
+                icon_color: blue
+                tap_action: { action: more-info }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g2_still_threshold' }"
                 name: "${ 'G2 (' + (2*res).toFixed(2) + 'm)' }"
-                display_mode: buttons
+                display_mode: "${ is_fast ? 'slider' : 'buttons' }"
+                icon_color: blue
+                tap_action: { action: more-info }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g3_still_threshold' }"
                 name: "${ 'G3 (' + (3*res).toFixed(2) + 'm)' }"
-                display_mode: buttons
+                display_mode: "${ is_fast ? 'slider' : 'buttons' }"
+                icon_color: blue
+                tap_action: { action: more-info }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g4_still_threshold' }"
                 name: "${ 'G4 (' + (4*res).toFixed(2) + 'm)' }"
-                display_mode: buttons
+                display_mode: "${ is_fast ? 'slider' : 'buttons' }"
+                icon_color: blue
+                tap_action: { action: more-info }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g5_still_threshold' }"
                 name: "${ 'G5 (' + (5*res).toFixed(2) + 'm)' }"
-                display_mode: buttons
+                display_mode: "${ is_fast ? 'slider' : 'buttons' }"
+                icon_color: blue
+                tap_action: { action: more-info }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g6_still_threshold' }"
                 name: "${ 'G6 (' + (6*res).toFixed(2) + 'm)' }"
-                display_mode: buttons
+                display_mode: "${ is_fast ? 'slider' : 'buttons' }"
+                icon_color: blue
+                tap_action: { action: more-info }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g7_still_threshold' }"
                 name: "${ 'G7 (' + (7*res).toFixed(2) + 'm)' }"
-                display_mode: buttons
+                display_mode: "${ is_fast ? 'slider' : 'buttons' }"
+                icon_color: blue
+                tap_action: { action: more-info }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g8_still_threshold' }"
                 name: "${ 'G8 (' + (8*res).toFixed(2) + 'm)' }"
-                display_mode: buttons
+                display_mode: "${ is_fast ? 'slider' : 'buttons' }"
+                icon_color: blue
+                tap_action: { action: more-info }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
 
       # --- ONGLET SYSTÈME ---
       - attributes:
