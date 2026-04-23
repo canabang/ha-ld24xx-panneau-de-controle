@@ -27,6 +27,11 @@ AUDIT_*.md
 PROJET_RULES.md
 # Ignorer systématiquement le dossier Lab (Secrets et IDs réels)
 /lab/
+# Ignorer les dossiers de backup IDE
+.history/
+
+# Ignorer les fichiers de travail temporaires (Brouillons)
+SCRATCH_*.yaml
 
 
 # Ignorer les fichiers temporaires et système
