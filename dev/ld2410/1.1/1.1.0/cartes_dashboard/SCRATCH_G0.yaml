@@ -1,0 +1,11 @@
+# =================================================================
+# 🧪 SCRATCHPAD - GATE 0 (DÉVELOPPEMENT)
+# COMPOSANT : Réglage du seuil de mouvement pour la Gate 0
+# PROJET : ha-ld24xx-panneau-de-controle
+# VERSION : 1.1.0-dev.scratch
+# =================================================================
+
+- type: custom:mushroom-number-card
+  entity: "${ 'number.' + esp + '_g0_move_threshold' }"
+  name: "G0 (0m)"
+  display_mode: buttons
