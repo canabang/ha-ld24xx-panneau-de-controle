@@ -1,8 +1,7 @@
 # =================================================================
-# 📋 DASHBOARD - CARTE RADAR LD2410 (DÉVELOPPEMENT)
-# OBJET : Interface de pilotage et d'analyse pour capteur LD2410
-# PRÉREQUIS HACS : config-template-card, mushroom, plotly-graph
-# VERSION : 1.1.0-dev
+# 📡 CARTE DASHBOARD LD2410 PRO EDITION (Version v2.11 - Mirror Pro)
+# Fichier : ld2410_dashboard_card.yaml
+# Synchronisation calquée sur le moteur ultra-réactif du LD2450
 # =================================================================
 
 type: vertical-stack
@@ -12,17 +11,17 @@ cards:
   # =================================================================
   - type: custom:config-template-card
     entities:
-      - input_select.selection_radar_ld2410
+      - input_select.liste_esp_ld2410
       - >-
-        ${ states['input_select.selection_radar_ld2410'] ? 'binary_sensor.' + states['input_select.selection_radar_ld2410'].state + '_presence' : 'sun.sun' }
+        ${ states['input_select.liste_esp_ld2410'] ? 'binary_sensor.' + states['input_select.liste_esp_ld2410'].state + '_presence' : 'sun.sun' }
     variables:
       esp: >-
-        states['input_select.selection_radar_ld2410'] ? states['input_select.selection_radar_ld2410'].state : ''
+        states['input_select.liste_esp_ld2410'] ? states['input_select.liste_esp_ld2410'].state : 'esp_salon'
     card:
       type: vertical-stack
       cards:
         - type: custom:mushroom-select-card
-          entity: input_select.selection_radar_ld2410
+          entity: input_select.liste_esp_ld2410
           name: "Capteur LD2410 Actif"
           icon: mdi:radar
           layout: horizontal
@@ -40,14 +39,14 @@ cards:
   # =================================================================
   - type: custom:config-template-card
     entities:
-      - input_select.selection_radar_ld2410
+      - input_select.liste_esp_ld2410
       - >-
-        ${ states['input_select.selection_radar_ld2410'] ? 'binary_sensor.' + states['input_select.selection_radar_ld2410'].state + '_movement' : 'sun.sun' }
+        ${ states['input_select.liste_esp_ld2410'] ? 'binary_sensor.' + states['input_select.liste_esp_ld2410'].state + '_movement' : 'sun.sun' }
       - >-
-        ${ states['input_select.selection_radar_ld2410'] ? 'binary_sensor.' + states['input_select.selection_radar_ld2410'].state + '_still' : 'sun.sun' }
+        ${ states['input_select.liste_esp_ld2410'] ? 'binary_sensor.' + states['input_select.liste_esp_ld2410'].state + '_still' : 'sun.sun' }
     variables:
       esp: >-
-        states['input_select.selection_radar_ld2410'] ? states['input_select.selection_radar_ld2410'].state : ''
+        states['input_select.liste_esp_ld2410'] ? states['input_select.liste_esp_ld2410'].state : 'esp_salon'
     card:
       type: grid
       columns: 2
@@ -67,11 +66,11 @@ cards:
             ${ states['binary_sensor.' + esp + '_still']?.state === 'on' ? '#2E8B57' : 'disabled' }
         - type: custom:mushroom-entity-card
           entity: "${ 'sensor.' + esp + '_moving_distance_cm' }"
-          name: Distance Mouvement
+          name: Dist. Move
           icon: mdi:signal-distance-variant
         - type: custom:mushroom-entity-card
           entity: "${ 'sensor.' + esp + '_still_distance_cm' }"
-          name: Distance Immobilité
+          name: Dist. Still
           icon: mdi:ruler-square
 
   # =================================================================
@@ -109,7 +108,7 @@ cards:
               x: [0, 1, 2, 3, 4, 5, 6, 7, 8]
               "y": |
                 $fn ({hass}) => {
-                  let esp = hass.states['input_select.selection_radar_ld2410']?.state || '';
+                  let esp = hass.states['input_select.liste_esp_ld2410']?.state || 'esp_salon';
                   return [0,1,2,3,4,5,6,7,8].map(i => Number(hass.states['number.'+esp+'_g'+i+'_move_threshold']?.state || 0));
                 }
             - entity: ""
@@ -120,7 +119,7 @@ cards:
               x: [0, 1, 2, 3, 4, 5, 6, 7, 8]
               "y": |
                 $fn ({hass}) => {
-                  let esp = hass.states['input_select.selection_radar_ld2410']?.state || '';
+                  let esp = hass.states['input_select.liste_esp_ld2410']?.state || 'esp_salon';
                   return [0,1,2,3,4,5,6,7,8].map(i => Number(hass.states['sensor.'+esp+'_g'+i+'_move_energy']?.state || 0));
                 }
 
@@ -153,7 +152,7 @@ cards:
               x: [0, 1, 2, 3, 4, 5, 6, 7, 8]
               "y": |
                 $fn ({hass}) => {
-                  let esp = hass.states['input_select.selection_radar_ld2410']?.state || '';
+                  let esp = hass.states['input_select.liste_esp_ld2410']?.state || 'esp_salon';
                   return [0,1,2,3,4,5,6,7,8].map(i => Number(hass.states['number.'+esp+'_g'+i+'_still_threshold']?.state || 0));
                 }
             - entity: ""
@@ -164,8 +163,8 @@ cards:
               x: [0, 1, 2, 3, 4, 5, 6, 7, 8]
               "y": |
                 $fn ({hass}) => {
-                  let esp = hass.states['input_select.selection_radar_ld2410']?.state || '';
-                  return [0,1,2,3,4,5,6,7,8].map(i => Number(hass.states['sensor.'+esp+'_g'+i+'_still_energy']?.state || 0));
+                  let esp = hass.states['input_select.liste_esp_ld2410']?.state || 'esp_salon';
+                  return [0,1,2,3,4,5,6,7,8].map(i => Number(hass.states['sensor.'+esp+'_still_energy']?.state || 0));
                 }
 
   # =================================================================
@@ -179,53 +178,53 @@ cards:
         card:
           type: custom:config-template-card
           entities:
-            - input_boolean.radar_affichage_sliders
-            - input_select.selection_radar_ld2410
+            - input_boolean.selection_ui_radar
+            - input_select.liste_esp_ld2410
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
-              states['input_select.selection_radar_ld2410'].state +
+              ${ states['input_select.liste_esp_ld2410'] ? 'number.' +
+              states['input_select.liste_esp_ld2410'].state +
               '_g0_move_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
-              states['input_select.selection_radar_ld2410'].state +
+              ${ states['input_select.liste_esp_ld2410'] ? 'number.' +
+              states['input_select.liste_esp_ld2410'].state +
               '_g1_move_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
-              states['input_select.selection_radar_ld2410'].state +
+              ${ states['input_select.liste_esp_ld2410'] ? 'number.' +
+              states['input_select.liste_esp_ld2410'].state +
               '_g2_move_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
-              states['input_select.selection_radar_ld2410'].state +
+              ${ states['input_select.liste_esp_ld2410'] ? 'number.' +
+              states['input_select.liste_esp_ld2410'].state +
               '_g3_move_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
-              states['input_select.selection_radar_ld2410'].state +
+              ${ states['input_select.liste_esp_ld2410'] ? 'number.' +
+              states['input_select.liste_esp_ld2410'].state +
               '_g4_move_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
-              states['input_select.selection_radar_ld2410'].state +
+              ${ states['input_select.liste_esp_ld2410'] ? 'number.' +
+              states['input_select.liste_esp_ld2410'].state +
               '_g5_move_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
-              states['input_select.selection_radar_ld2410'].state +
+              ${ states['input_select.liste_esp_ld2410'] ? 'number.' +
+              states['input_select.liste_esp_ld2410'].state +
               '_g6_move_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
-              states['input_select.selection_radar_ld2410'].state +
+              ${ states['input_select.liste_esp_ld2410'] ? 'number.' +
+              states['input_select.liste_esp_ld2410'].state +
               '_g7_move_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
-              states['input_select.selection_radar_ld2410'].state +
+              ${ states['input_select.liste_esp_ld2410'] ? 'number.' +
+              states['input_select.liste_esp_ld2410'].state +
               '_g8_move_threshold' : 'sun.sun' }
           variables:
             esp: >-
-              states['input_select.selection_radar_ld2410'] ?
-              states['input_select.selection_radar_ld2410'].state : ''
-            is_fast: "states['input_boolean.radar_affichage_sliders']?.state === 'on'"
+              states['input_select.liste_esp_ld2410'] ?
+              states['input_select.liste_esp_ld2410'].state : 'esp_salon'
+            is_fast: "states['input_boolean.selection_ui_radar']?.state === 'on'"
             res: >-
               parseFloat(states['select.' +
-              (states['input_select.selection_radar_ld2410'] ?
-              states['input_select.selection_radar_ld2410'].state : '') +
+              (states['input_select.liste_esp_ld2410'] ?
+              states['input_select.liste_esp_ld2410'].state : 'esp_salon') +
               '_distance_resolution']?.state || 0.75)
           card:
             type: grid
@@ -238,63 +237,63 @@ cards:
                 display_mode: "${ is_fast ? 'slider' : 'buttons' }"
                 icon_color: blue
                 tap_action: { action: more-info }
-                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.selection_ui_radar } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g1_move_threshold' }"
                 name: "${ 'G1 (' + (1*res).toFixed(2) + 'm)' }"
                 display_mode: "${ is_fast ? 'slider' : 'buttons' }"
                 icon_color: blue
                 tap_action: { action: more-info }
-                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.selection_ui_radar } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g2_move_threshold' }"
                 name: "${ 'G2 (' + (2*res).toFixed(2) + 'm)' }"
                 display_mode: "${ is_fast ? 'slider' : 'buttons' }"
                 icon_color: blue
                 tap_action: { action: more-info }
-                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.selection_ui_radar } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g3_move_threshold' }"
                 name: "${ 'G3 (' + (3*res).toFixed(2) + 'm)' }"
                 display_mode: "${ is_fast ? 'slider' : 'buttons' }"
                 icon_color: blue
                 tap_action: { action: more-info }
-                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.selection_ui_radar } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g4_move_threshold' }"
                 name: "${ 'G4 (' + (4*res).toFixed(2) + 'm)' }"
                 display_mode: "${ is_fast ? 'slider' : 'buttons' }"
                 icon_color: blue
                 tap_action: { action: more-info }
-                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.selection_ui_radar } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g5_move_threshold' }"
                 name: "${ 'G5 (' + (5*res).toFixed(2) + 'm)' }"
                 display_mode: "${ is_fast ? 'slider' : 'buttons' }"
                 icon_color: blue
                 tap_action: { action: more-info }
-                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.selection_ui_radar } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g6_move_threshold' }"
                 name: "${ 'G6 (' + (6*res).toFixed(2) + 'm)' }"
                 display_mode: "${ is_fast ? 'slider' : 'buttons' }"
                 icon_color: blue
                 tap_action: { action: more-info }
-                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.selection_ui_radar } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g7_move_threshold' }"
                 name: "${ 'G7 (' + (7*res).toFixed(2) + 'm)' }"
                 display_mode: "${ is_fast ? 'slider' : 'buttons' }"
                 icon_color: blue
                 tap_action: { action: more-info }
-                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.selection_ui_radar } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g8_move_threshold' }"
                 name: "${ 'G8 (' + (8*res).toFixed(2) + 'm)' }"
                 display_mode: "${ is_fast ? 'slider' : 'buttons' }"
                 icon_color: blue
                 tap_action: { action: more-info }
-                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.selection_ui_radar } }
 
       # --- ONGLET STILL ---
       - attributes:
@@ -302,53 +301,53 @@ cards:
         card:
           type: custom:config-template-card
           entities:
-            - input_boolean.radar_affichage_sliders
-            - input_select.selection_radar_ld2410
+            - input_boolean.selection_ui_radar
+            - input_select.liste_esp_ld2410
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
-              states['input_select.selection_radar_ld2410'].state +
+              ${ states['input_select.liste_esp_ld2410'] ? 'number.' +
+              states['input_select.liste_esp_ld2410'].state +
               '_g0_still_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
-              states['input_select.selection_radar_ld2410'].state +
+              ${ states['input_select.liste_esp_ld2410'] ? 'number.' +
+              states['input_select.liste_esp_ld2410'].state +
               '_g1_still_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
-              states['input_select.selection_radar_ld2410'].state +
+              ${ states['input_select.liste_esp_ld2410'] ? 'number.' +
+              states['input_select.liste_esp_ld2410'].state +
               '_g2_still_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
-              states['input_select.selection_radar_ld2410'].state +
+              ${ states['input_select.liste_esp_ld2410'] ? 'number.' +
+              states['input_select.liste_esp_ld2410'].state +
               '_g3_still_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
-              states['input_select.selection_radar_ld2410'].state +
+              ${ states['input_select.liste_esp_ld2410'] ? 'number.' +
+              states['input_select.liste_esp_ld2410'].state +
               '_g4_still_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
-              states['input_select.selection_radar_ld2410'].state +
+              ${ states['input_select.liste_esp_ld2410'] ? 'number.' +
+              states['input_select.liste_esp_ld2410'].state +
               '_g5_still_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
-              states['input_select.selection_radar_ld2410'].state +
+              ${ states['input_select.liste_esp_ld2410'] ? 'number.' +
+              states['input_select.liste_esp_ld2410'].state +
               '_g6_still_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
-              states['input_select.selection_radar_ld2410'].state +
+              ${ states['input_select.liste_esp_ld2410'] ? 'number.' +
+              states['input_select.liste_esp_ld2410'].state +
               '_g7_still_threshold' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' +
-              states['input_select.selection_radar_ld2410'].state +
+              ${ states['input_select.liste_esp_ld2410'] ? 'number.' +
+              states['input_select.liste_esp_ld2410'].state +
               '_g8_still_threshold' : 'sun.sun' }
           variables:
             esp: >-
-              states['input_select.selection_radar_ld2410'] ?
-              states['input_select.selection_radar_ld2410'].state : ''
-            is_fast: "states['input_boolean.radar_affichage_sliders']?.state === 'on'"
+              states['input_select.liste_esp_ld2410'] ?
+              states['input_select.liste_esp_ld2410'].state : 'esp_salon'
+            is_fast: "states['input_boolean.selection_ui_radar']?.state === 'on'"
             res: >-
               parseFloat(states['select.' +
-              (states['input_select.selection_radar_ld2410'] ?
-              states['input_select.selection_radar_ld2410'].state : '') +
+              (states['input_select.liste_esp_ld2410'] ?
+              states['input_select.liste_esp_ld2410'].state : 'esp_salon') +
               '_distance_resolution']?.state || 0.75)
           card:
             type: grid
@@ -361,63 +360,63 @@ cards:
                 display_mode: "${ is_fast ? 'slider' : 'buttons' }"
                 icon_color: blue
                 tap_action: { action: more-info }
-                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.selection_ui_radar } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g1_still_threshold' }"
                 name: "${ 'G1 (' + (1*res).toFixed(2) + 'm)' }"
                 display_mode: "${ is_fast ? 'slider' : 'buttons' }"
                 icon_color: blue
                 tap_action: { action: more-info }
-                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.selection_ui_radar } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g2_still_threshold' }"
                 name: "${ 'G2 (' + (2*res).toFixed(2) + 'm)' }"
                 display_mode: "${ is_fast ? 'slider' : 'buttons' }"
                 icon_color: blue
                 tap_action: { action: more-info }
-                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.selection_ui_radar } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g3_still_threshold' }"
                 name: "${ 'G3 (' + (3*res).toFixed(2) + 'm)' }"
                 display_mode: "${ is_fast ? 'slider' : 'buttons' }"
                 icon_color: blue
                 tap_action: { action: more-info }
-                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.selection_ui_radar } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g4_still_threshold' }"
                 name: "${ 'G4 (' + (4*res).toFixed(2) + 'm)' }"
                 display_mode: "${ is_fast ? 'slider' : 'buttons' }"
                 icon_color: blue
                 tap_action: { action: more-info }
-                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.selection_ui_radar } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g5_still_threshold' }"
                 name: "${ 'G5 (' + (5*res).toFixed(2) + 'm)' }"
                 display_mode: "${ is_fast ? 'slider' : 'buttons' }"
                 icon_color: blue
                 tap_action: { action: more-info }
-                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.selection_ui_radar } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g6_still_threshold' }"
                 name: "${ 'G6 (' + (6*res).toFixed(2) + 'm)' }"
                 display_mode: "${ is_fast ? 'slider' : 'buttons' }"
                 icon_color: blue
                 tap_action: { action: more-info }
-                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.selection_ui_radar } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g7_still_threshold' }"
                 name: "${ 'G7 (' + (7*res).toFixed(2) + 'm)' }"
                 display_mode: "${ is_fast ? 'slider' : 'buttons' }"
                 icon_color: blue
                 tap_action: { action: more-info }
-                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.selection_ui_radar } }
               - type: custom:mushroom-number-card
                 entity: "${ 'number.' + esp + '_g8_still_threshold' }"
                 name: "${ 'G8 (' + (8*res).toFixed(2) + 'm)' }"
                 display_mode: "${ is_fast ? 'slider' : 'buttons' }"
                 icon_color: blue
                 tap_action: { action: more-info }
-                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.radar_affichage_sliders } }
+                double_tap_action: { action: call-service, service: input_boolean.toggle, target: { entity_id: input_boolean.selection_ui_radar } }
 
       # --- ONGLET SYSTÈME ---
       - attributes:
@@ -425,18 +424,27 @@ cards:
         card:
           type: custom:config-template-card
           entities:
-            - input_select.selection_radar_ld2410
+            - input_select.liste_esp_ld2410
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' + states['input_select.selection_radar_ld2410'].state + '_timeout' : 'sun.sun' }
+              ${ states['input_select.liste_esp_ld2410'] ? 'number.' +
+              states['input_select.liste_esp_ld2410'].state + '_timeout' :
+              'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'switch.' + states['input_select.selection_radar_ld2410'].state + '_engineering_mode' : 'sun.sun' }
+              ${ states['input_select.liste_esp_ld2410'] ? 'switch.' +
+              states['input_select.liste_esp_ld2410'].state +
+              '_engineering_mode' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' + states['input_select.selection_radar_ld2410'].state + '_max_move_distance_gate' : 'sun.sun' }
+              ${ states['input_select.liste_esp_ld2410'] ? 'number.' +
+              states['input_select.liste_esp_ld2410'].state +
+              '_max_move_distance_gate' : 'sun.sun' }
             - >-
-              ${ states['input_select.selection_radar_ld2410'] ? 'number.' + states['input_select.selection_radar_ld2410'].state + '_max_still_distance_gate' : 'sun.sun' }
+              ${ states['input_select.liste_esp_ld2410'] ? 'number.' +
+              states['input_select.liste_esp_ld2410'].state +
+              '_max_still_distance_gate' : 'sun.sun' }
           variables:
             esp: >-
-              states['input_select.selection_radar_ld2410'] ? states['input_select.selection_radar_ld2410'].state : ''
+              states['input_select.liste_esp_ld2410'] ?
+              states['input_select.liste_esp_ld2410'].state : 'esp_salon'
           card:
             type: vertical-stack
             cards:
@@ -465,7 +473,8 @@ cards:
                     entity: "${ 'switch.' + esp + '_engineering_mode' }"
                     name: Mode Ingénieur
                     icon_color: >-
-                      ${ states['switch.' + esp + '_engineering_mode']?.state === 'on' ? '#2E8B57' : 'disabled' }
+                      ${ states['switch.' + esp + '_engineering_mode']?.state
+                      === 'on' ? '#2E8B57' : 'disabled' }
                     tap_action:
                       action: toggle
                   - type: custom:mushroom-entity-card

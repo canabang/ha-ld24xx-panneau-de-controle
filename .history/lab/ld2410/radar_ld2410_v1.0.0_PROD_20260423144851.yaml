@@ -1,26 +1,27 @@
 # =================================================================
-# 🛡️ 📦 GOUVERNANCE SENTINEL GOLD - RADAR LD2410 (DÉVELOPPEMENT)
-# OBJET : Helpers pour interface de contrôle (Sélecteur & Affichage)
-# MISSION : Piloter le radar et son interface dynamique
-# VERSION : 1.1.0-dev
+# 🛠️ PACKAGE : CONFIGURATION RADAR LD2410
+# Fonction : Helpers pour le pilotage et l'affichage du Dashboard
 # =================================================================
 
 input_select:
-  selection_radar_ld2410:
-    name: "Sélection du Radar LD2410"
+  liste_esp_ld2410:
+    name: "Choisir un radar LD2410"
     icon: mdi:radar
     # -------------------------------------------------------------
     # IMPORTANT : Les options ci-dessous DOIVENT correspondre EXACTEMENT
     # au nom de l'appareil (sans 'sensor.') déclaré dans ESPHome.
+    # (ex: si l'ESP s'appelle `esp_sdb`, utilisez exactement `esp_sdb` ici)
     # -------------------------------------------------------------
     options:
-      - A_CHANGER_NOM_APPAREIL_1
-      - A_CHANGER_NOM_APPAREIL_2
-      - A_CHANGER_NOM_APPAREIL_3
-    initial: A_CHANGER_NOM_APPAREIL_1
+      - esp_multi_capteur
+      - esp_salon
+      - esp_sdb
+      - esp_chambre
+      - esp_cuisine
+    initial: esp_sdb
 
 input_boolean:
   radar_affichage_sliders:
     name: "Affichage des curseurs (Radar)"
     icon: mdi:tune
-    initial: false
+    initial: off
