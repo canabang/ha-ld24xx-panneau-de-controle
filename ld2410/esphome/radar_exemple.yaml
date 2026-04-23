@@ -1,10 +1,10 @@
 # =================================================================
-# 📋 EXEMPLE DE CONFIGURATION - FIRMWARE LD2410
+# 📋 MODÈLE DE CONFIGURATION - FIRMWARE LD2410
 # OBJET : Modèle de structure ESPHome multi-capteurs
 # MISSION : Illustrer l'organisation modulaire via !include
 # NOTE : Ce fichier sert de base pour comprendre l'intégration
 #        des radars et des capteurs environnementaux.
-# VERSION : 1.0.0 (Snapshot)
+# VERSION : 1.0.0 (Stable)
 # =================================================================
 
 substitutions:
@@ -43,11 +43,11 @@ substitutions:
   distance_delta: "10.0"
 
 packages:
-  base: !include .base.yaml
-  bluetooth: !include .bluetooth.yaml
-  i2c: !include .i2c.yaml
-  bme280: !include .bme280.yaml
-  bh1750: !include .bh1750.yaml
+  # base: !include .base.yaml         # Socle commun (Non fourni dans cette démo)
+  # bluetooth: !include .bluetooth.yaml
+  # i2c: !include .i2c.yaml
+  # bme280: !include .bme280.yaml
+  # bh1750: !include .bh1750.yaml
   ld2410: !include .ld2410.yaml
 
 # Enable Home Assistant API

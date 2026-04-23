@@ -1,8 +1,8 @@
 # =================================================================
-# 📋 MODULE RADAR LD2410 - LOGIQUE INTERNE
+# 📋 MODULE RADAR LD2410 - LOGIQUE INTERNE (DÉVELOPPEMENT)
 # OBJET : Définition des entités et du traitement UART
 # MISSION : Moteur de détection partagé par tous les firmwares LD2410
-# VERSION : 1.0.0 (Snapshot)
+# VERSION : 1.1.0-dev
 # =================================================================
 
 substitutions:

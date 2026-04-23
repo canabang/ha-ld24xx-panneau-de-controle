@@ -35,7 +35,7 @@ substitutions:
   # ==========================================
 
 packages:
-  base: !include .base.yaml
+  # base: !include .base.yaml
   ld2450: !include .ld2450.yaml
 
 # Configuration de l'API Home Assistant

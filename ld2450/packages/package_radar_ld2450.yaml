@@ -1,19 +1,19 @@
 # =================================================================
-# 🛡️ GOUVERNANCE SENTINEL GOLD - RADAR LD2410
-# OBJET : Sélecteur d'appareil pour interface de contrôle
+# 📋 EXEMPLE DE PACKAGE - SÉLECTION RADAR LD2450
+# OBJET : Sélecteur d'appareil pour interface de contrôle LD2450
 # MISSION : Piloter le basculement dynamique entre plusieurs radars
-# VERSION : 1.0.0 (Snapshot)
+# VERSION : 1.0.0 (Stable)
 # =================================================================
 
-selection_radar_ld2410:
-  name: "Sélection du Radar LD2410"
+selection_radar_ld2450:
+  name: "Sélection du Radar LD2450"
   icon: mdi:radar
   # -------------------------------------------------------------
   # IMPORTANT : Les options ci-dessous DOIVENT correspondre EXACTEMENT
-  # au nom de l'appareil (sans 'sensor.') déclaré dans ESPHome.
+  # au nom de l'appareil (esphome.name) déclaré dans votre firmware.
   # -------------------------------------------------------------
   options:
-    - A_CHANGER_NOM_APPAREIL_1
-    - A_CHANGER_NOM_APPAREIL_2
-    - A_CHANGER_NOM_APPAREIL_3
-  initial: A_CHANGER_NOM_APPAREIL_1
+    - A_CHANGER_NOM_APPAREIL_LD2450_1
+    - A_CHANGER_NOM_APPAREIL_LD2450_2
+    - A_CHANGER_NOM_APPAREIL_LD2450_3
+  initial: A_CHANGER_NOM_APPAREIL_LD2450_1

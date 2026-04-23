@@ -1,8 +1,8 @@
 # =================================================================
-# 📋 EXEMPLE DE DASHBOARD - CARTE RADAR LD2410
+# 📋 DASHBOARD - CARTE RADAR LD2410 (DÉVELOPPEMENT)
 # OBJET : Interface de pilotage et d'analyse pour capteur LD2410
 # PRÉREQUIS HACS : config-template-card, mushroom, plotly-graph
-# VERSION : 1.0.0 (Snapshot)
+# VERSION : 1.1.0-dev
 # =================================================================
 
 type: vertical-stack
